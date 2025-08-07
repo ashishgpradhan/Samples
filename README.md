@@ -46,7 +46,7 @@ Security, compliance, and cost-efficiency are not mutually exclusive—they are 
 
 ## 🔗 Connect With Me
 
-- [LinkedIn](www.linkedin.com/in/ashishgpradhan)
+- [LinkedIn](https://www.linkedin.com/in/ashishgpradhan)
 ---
 
 
