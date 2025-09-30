@@ -1,9 +1,9 @@
 // app.js
-const express = require('express');
-const mysql = require('mysql');
-const { exec } = require('child_process');
-const _ = require('lodash');
-const serialize = require('node-serialize');
+const express = require("express");
+const mysql = require("mysql");
+const { exec } = require("child_process");
+const _ = require("lodash");
+const serialize = require("node-serialize");
 
 const app = express();
 app.use(express.json());
@@ -15,20 +15,23 @@ app.use(express.urlencoded({ extended: true }));
  * Static analysis should flag concatenation-based queries.
  */
 const db = mysql.createConnection({
-  host: '127.0.0.1', user: 'root', password: '', database: 'demo'
+  host: "127.0.0.1",
+  user: "root",
+  password: "",
+  database: "demo",
 });
 //db.connect();
 
 /* vulnerable route: builds query using unsanitized input */
-app.get('/user', (req, res) => {
+app.get("/user", (req, res) => {
   const id = req.query.id; // attacker-controlled
   // BAD: direct interpolation -> SQL injection risk
-  console.log(id)
-  
+  console.log(id);
+
   //res.send(id)
   const q = "SELECT * FROM users WHERE id = '" + id + "'";
   db.query(q, (err, rows) => {
-    if (err) return res.status(500).send('db error');
+    if (err) return res.status(500).send("db error");
     res.json(rows);
   });
 });
@@ -37,11 +40,10 @@ app.get('/user', (req, res) => {
  * 2) Command Injection / Unsafe child_process usage (SAST)
  * Passing raw user input into shell execution.
  */
-app.post('/run', (req, res) => {
+app.post("/run", (req, res) => {
   const cmdArg = req.body.cmd; // attacker-controlled
   // BAD: exec spawns a shell; passing user input directly is dangerous
   exec(`ls ${cmdArg}`, (err, stdout, stderr) => {
-
     console.log(stdout);
     if (err) return res.status(500).send(err);
     res.send(stdout);
@@ -53,7 +55,7 @@ app.post('/run', (req, res) => {
  * Using node-serialize.unserialize() on untrusted input is dangerous.
  * The node-serialize package version in package.json is intentionally old and vulnerable.
  */
-app.post('/deserialize', (req, res) => {
+app.post("/deserialize", (req, res) => {
   const s = req.body.payload; // attacker-controlled
   try {
     // BAD: deserializing untrusted input
@@ -69,7 +71,7 @@ app.post('/deserialize', (req, res) => {
  * Using lodash in a way where untrusted keys might be merged into objects.
  * Even if lodash itself weren't vulnerable, unsafe merges with untrusted keys are risky.
  */
-app.post('/merge', (req, res) => {
+app.post("/merge", (req, res) => {
   const userObj = req.body.data; // attacker-controlled
   const config = { safe: true, options: {} };
   // BAD: merging untrusted object into internal config
@@ -82,12 +84,12 @@ app.post('/merge', (req, res) => {
  * Using MD5 (or other fast hash) for purposes that require cryptographic hashing.
  * This is a coding smell that SAST tools highlight (use bcrypt/argon2 for passwords).
  */
-const crypto = require('crypto');
-app.post('/weak-hash', (req, res) => {
-  const pw = req.body.pw || '';
+const crypto = require("crypto");
+app.post("/weak-hash", (req, res) => {
+  const pw = req.body.pw || "";
   // BAD: fast/weak hash for passwords
-  const hash = crypto.createHash('md5').update(pw).digest('hex');
+  const hash = crypto.createHash("md5").update(pw).digest("hex");
   res.json({ hash });
 });
 
-app.listen(3000, () => console.log('demo app running on :3000'));
+app.listen(3000, () => console.log("demo app running on :3000"));
