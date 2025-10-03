@@ -8,11 +8,11 @@ variable "region" {
 variable "access_key" {
   description = "The AWS access key."
   type        = string
-    default = "AKIA2RQ6ZHLELGUOIPE2"
+  default     = "AKIA2RQ6ZHLELGUOIPE2"
 }
 
 variable "secret_key" {
   description = "The AWS secret key."
   type        = string
-  default = "9WqGblqC2ukpvfBX9Ede4tRan40kPLcmgkNOWIBC"
+  default     = "9WqGblqC2ukpvfBX9Ede4tRan40kPLcmgkNOWIBC"
 }

@@ -1,7 +1,7 @@
 resource "random_string" "random" {
-  length = 6
+  length  = 6
   special = false
-  upper = false         
+  upper   = false
 }
 
 
@@ -10,8 +10,8 @@ resource "aws_s3_bucket" "s3_bucket" {
 }
 
 resource "aws_s3_object" "s3_object" {
-  bucket = aws_s3_bucket.s3_bucket.id
-  key    = "example.txt"
+  bucket  = aws_s3_bucket.s3_bucket.id
+  key     = "example.txt"
   content = "This is an example file."
 }
 
@@ -31,5 +31,5 @@ resource "aws_s3_bucket_lifecycle_configuration" "lifecyle-rule" {
       days = 365
     }
   }
-  
+
 }

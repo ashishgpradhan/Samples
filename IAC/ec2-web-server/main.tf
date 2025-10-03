@@ -22,8 +22,8 @@ resource "aws_security_group" "web-server-sg" {
 
 
 resource "aws_instance" "web-server" {
-  ami           = "ami-08982f1c5bf93d976" # Amazon Linux 2 AMI
-  instance_type = "t2.micro"
+  ami             = "ami-08982f1c5bf93d976" # Amazon Linux 2 AMI
+  instance_type   = "t2.micro"
   security_groups = [aws_security_group.web-server-sg.name]
 
   user_data = <<-EOF
@@ -38,5 +38,5 @@ resource "aws_instance" "web-server" {
   tags = {
     Name = "WebServerInstance"
   }
-  
+
 }
