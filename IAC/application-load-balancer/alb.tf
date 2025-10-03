@@ -50,5 +50,4 @@ resource "aws_lb_target_group_attachment" "web_tg_attachment" {
   target_id        = aws_instance.web_server[count.index].id
   port             = 80
 
-
 }
